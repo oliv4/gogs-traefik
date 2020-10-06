@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    restart: always
+    image: gogs/gogs:latest
+    container_name: gogs
+    labels:
+        - "traefik.backend=gogs-www"
+        - "traefik.frontend.rule=Host:gogs.local"
+        - "traefik.enable=true"
+        - "traefik.port=3000"
+    volumes:
+        - "./data:/data/gogs"
+        - "./repo:/data/git/gogs-repositories"
+    networks:
+        - web
+    environment:
+        - "RUN_CROND=true"
+    extra_hosts:
+        - "db.local:172.18.0.1"
+networks:
+    web:
+        external: true
